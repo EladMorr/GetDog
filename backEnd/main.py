@@ -12,7 +12,7 @@ dogsList = [
 
 
 @app.get("/TestDogsList")
-def test():
+def test1():
     return dogsList
 
 
