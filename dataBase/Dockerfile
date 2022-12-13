@@ -1,8 +1,7 @@
 FROM python:3.9
 
-RUN pip install fastapi
-RUN pip install "uvicorn[standard]"
-RUN pip install mysql-connector-python
+COPY ./req.txt .
+RUN pip install -r req.txt
 
 WORKDIR /app
 COPY . .
