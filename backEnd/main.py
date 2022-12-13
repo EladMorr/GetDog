@@ -5,9 +5,10 @@ from models import *
 
 app = FastAPI()
 
+#  Hard coded ... remove later
 dogsList = [
     Dog(id=1, name="koko", age=12, color="yellow",
-        race="husky", desc="good with kids")
+        race="husky", desc="good with kids !!!")
 ]
 
 
