@@ -11,8 +11,8 @@ dogsList = [
 ]
 
 
-@app.get("/TestDogsList")
-def test1():
+@app.get("/v1/TestDogsList")
+def TestDogsList():
     return dogsList
 
 
