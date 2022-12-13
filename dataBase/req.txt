@@ -1,4 +1,4 @@
 mysql-connector-python
-"uvicorn[standard]"
+uvicorn[standard]
 fastapi
 uvicorn

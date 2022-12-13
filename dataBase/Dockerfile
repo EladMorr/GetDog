@@ -6,6 +6,6 @@ RUN pip install -r req.txt
 WORKDIR /app
 COPY . .
 
-EXPOSE 80
+EXPOSE 3306
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
