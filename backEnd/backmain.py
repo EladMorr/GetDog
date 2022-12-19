@@ -11,21 +11,21 @@ dogsList = [
 
 class Backend:
     @app.get("/v1/TestDogsList")
-    async def TestDogsList():
+    def TestDogsList():
         return dogsList
 
     @app.get("/GetDogsList")
-    async def GetDogsList():
+    def GetDogsList():
         return "http request to get dogs list from DB by dog service"
 
     @app.post("/AddDog/")
-    async def AddDog(newDog: Dog):
+    def AddDog(newDog: Dog):
         return "http request to add new dog to DB by dog service"
 
     @app.put("/EditDog")
-    async def EditDog(updateDog: Dog):
+    def EditDog(updateDog: Dog):
         return "http request to update existing dog in DB by dog service"
 
     @app.delete("/RemoveDog")
-    async def RemoveDog(dog_id: int):
+    def RemoveDog(dog_id: int):
         return "http request to remove existing dog in DB by dog service"
