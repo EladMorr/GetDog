@@ -1,16 +1,16 @@
-from fastapi import FastAPI
-import mysql.connector
-from mysql.connector import Error
+# from fastapi import FastAPI
+# import mysql.connector
+# from mysql.connector import Error
 
-app = FastAPI()
+# app = FastAPI()
 
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="myusername",
-    password="mypassword"
-)
+# mydb = mysql.connector.connect(
+#     host="localhost",
+#     user="myusername",
+#     password="mypassword"
+# )
 
-mycursor = mydb.cursor()
+# mycursor = mydb.cursor()
 
-mycursor.execute("CREATE DATABASE mydatabase")
+# mycursor.execute("CREATE DATABASE mydatabase")
