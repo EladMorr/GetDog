@@ -1,17 +1,17 @@
 from pydantic import BaseModel
 
 class Dog(BaseModel):
-    id: int
-    name: str
-    age: float
-    color: str
-    race: str
-    desc: str
-
-    # def __init__(self, id, name, age, color, race, desc):
-    #     self.id = id
-    #     self.name = name
-    #     self.age = age
-    #     self.color = color
-    #     self.race = race
-    #     self.desc = desc
+    m_id: int
+    m_name: str
+    m_age: float
+    m_color: str
+    m_race: str
+    m_desc: str
+    
+    def __init__(self, id, name, age, color, race, desc):
+        super().__init__(m_id = id, 
+                         m_name = name,
+                         m_age = age,
+                         m_color = color,
+                         m_race = race,
+                         m_desc = desc)

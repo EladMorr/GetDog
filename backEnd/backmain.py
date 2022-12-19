@@ -5,8 +5,7 @@ app = FastAPI()
 
 #  Hard coded ... remove later
 dogsList = [
-    # Dog(id=1, name="koko", age=12, color="yellow",
-    #     race="husky", desc="good with kids !!!")
+    Dog(1, "Koko", 2.4, "yellow", "husky", "good with kids !!!")
 ]
 
 class Backend:
