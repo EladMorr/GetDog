@@ -5,7 +5,7 @@ def test_backend_function():
     result = Backend.GetDogsList()
     assert result == "http request to get dogs list from DB by dog service"
     
-    newDog = Dog(id="1", name="Koko", age=2, color="yellow", race="husky", desc="cute dog")
+    newDog = Dog(1, "Koko", 2, "yellow", "husky", "cute dog")
     
     result = Backend.AddDog(newDog)
     assert result == "http request to add new dog to DB by dog service"
