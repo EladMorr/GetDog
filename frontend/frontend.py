@@ -2,8 +2,6 @@ import streamlit as st
 from streamlit.web.cli import main
 import pandas as pd
 import mysql.connector
-from st_aggrid import AgGrid
-from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit.components.v1 import html
 
 # st.markdown("https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2022-08/220805-border-collie-play-mn-1100-82d2f1.jpg")
@@ -114,7 +112,7 @@ elif choice == "Add Dog":
         name_input = st.text_input("**Your dog name**")
         age_input = st.number_input("**Your dog age**")
         if age_input < 0:
-            st.warning("**Age cannot be less than 0**")
+            st.error("**Age cannot be less than 0**")
         color_input = st.text_input("**Describe the color of your dog**")
         race_input = st.text_input("**What is the race of your dog?**")
         about_input = st.text_area("**Tell some about your dog...**")
@@ -126,6 +124,6 @@ elif choice == "Add Dog":
             if st.button("Add"):
                 add_dog(image_input, name_input, age_input, color_input, race_input,
                         about_input, phone_number_input, owner_name_input, price_input)
-        st.session_state = False
+                st.session_state = False
 
 add_bg_from_url()
