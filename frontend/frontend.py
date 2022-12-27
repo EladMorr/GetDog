@@ -41,18 +41,8 @@ dogs_db = pd.DataFrame({
 dogs_db2 = dogs_db
 
 menu = ["Home", "Add Dog", "Edit Dog", "Delete Dog", "About"]
+st.sidebar.header('Menu')
 choice = st.sidebar.radio("Choose screen", menu)
-
-# Add content to the sidebar panel
-st.sidebar.text('This is a sidebar panel')
-
-st.sidebar.header('Panel 1')
-st.sidebar.text('This is the first sidebar panel')
-st.sidebar.slider(min_value=0, max_value=1000, label="Select maximum price:")
-
-# Create a second sidebar panel
-st.sidebar.header('Edit Dog')
-st.sidebar.text('Edit the information about your dog')
 
 
 def add_dog(image, name, age, color, race, about, phoneNumber, ownerName, price):
@@ -105,31 +95,37 @@ def add_bg_from_url():
 
 if choice == "Home":
     get_dogs()
+    st.sidebar.header('Sort by price')
+    st.sidebar.slider(min_value=0, max_value=1000,
+                      label="Select maximum price:")
 
 elif choice == "Add Dog":
     st.header("Add Dog")
     col1, col2 = st.columns(2)
     with col1:
         options = ["Take a picture", "Upload from computer", "URL"]
-        image_input = st.selectbox("Add a picture of your dog", options)
+        image_input = st.selectbox("**Add a picture of your dog**", options)
         if image_input == "Take a picture":
             st.camera_input("Take a picture")
         elif image_input == "Upload from computer":
             st.file_uploader("Upload from computer")
         elif image_input == "URL":
             st.text_input("Add image from URL")
-        name_input = st.text_input("Your dog name")
-        age_input = st.number_input("Your dog age")
-        color_input = st.text_input("Describe the color of your dog")
-        race_input = st.text_input("What is the race of your dog?")
-        about_input = st.text_area("Tell some about your dog...")
-        phone_number_input = st.text_input("Insert your phone number")
-        owner_name_input = st.text_input("Owner name")
+        name_input = st.text_input("**Your dog name**")
+        age_input = st.number_input("**Your dog age**")
+        if age_input < 0:
+            st.warning("**Age cannot be less than 0**")
+        color_input = st.text_input("**Describe the color of your dog**")
+        race_input = st.text_input("**What is the race of your dog?**")
+        about_input = st.text_area("**Tell some about your dog...**")
+        phone_number_input = st.text_input("**Insert your phone number**")
+        owner_name_input = st.text_input("**Owner name**")
         price_input = st.text_input(
-            "What is your price? (it's better for free :))")
-        if st.button("Add"):
-            add_dog(image_input, name_input, age_input, color_input, race_input,
-                    about_input, phone_number_input, owner_name_input, price_input)
+            "**What is your price? (it's better for free :))**")
+        if age_input > 0:
+            if st.button("Add"):
+                add_dog(image_input, name_input, age_input, color_input, race_input,
+                        about_input, phone_number_input, owner_name_input, price_input)
         st.session_state = False
 
 add_bg_from_url()
