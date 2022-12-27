@@ -14,18 +14,18 @@ class Backend:
     def TestDogsList():
         return dogsList
 
-    @app.get("/GetDogsList")
+    @app.get("/v1/GetDogsList")
     def GetDogsList():
         return "http request to get dogs list from DB by dog service"
 
-    @app.post("/AddDog/")
+    @app.post("/v1/AddDog")
     def AddDog(newDog: Dog):
         return "http request to add new dog to DB by dog service"
 
-    @app.put("/EditDog")
+    @app.put("/v1/EditDog")
     def EditDog(updateDog: Dog):
         return "http request to update existing dog in DB by dog service"
 
-    @app.delete("/RemoveDog")
+    @app.delete("/v1/RemoveDog")
     def RemoveDog(dog_id: int):
         return "http request to remove existing dog in DB by dog service"
