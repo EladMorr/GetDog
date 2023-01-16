@@ -15,3 +15,4 @@ ToDo:
 8. complete the about page
 9. upload images
 10. significant names to directories/images
+11. pytest
