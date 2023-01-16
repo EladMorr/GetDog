@@ -13,3 +13,5 @@ ToDo:
 6. semanthics
 7. add some comments
 8. complete the about page
+9. upload images
+10. significant names to directories/images
