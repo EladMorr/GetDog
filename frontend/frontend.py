@@ -1,20 +1,71 @@
-import streamlit as st
-from streamlit.web.cli import main
-import pandas as pd
-import mysql.connector
+import os
 from streamlit.components.v1 import html
+import pandas as pd
+from streamlit.web.cli import main
+import streamlit as st
+from streamlit_card import card
+import requests
+from urllib.parse import urlparse
+from pydantic import BaseModel
+import json
 
-# st.markdown("https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2022-08/220805-border-collie-play-mn-1100-82d2f1.jpg")
+
 st.set_page_config(layout="wide")
-# st.markdown(
-#    f'''
-#    <style>
-#         p {
-#         background-image: url('https://img.freepik.com/free-photo/grunge-paint-background_1409-1337.jpg?w=2000');
-#         }
-#    </style>
-#    ''',
-#    unsafe_allow_html=True)
+
+
+class Dog(BaseModel):
+    cheap_number: int
+    image: str
+    name: str
+    color: str
+    age: float
+    race: str
+    about: str
+    phone_number: str
+    owner_name: str
+    price: str
+
+def create_card(cheap_number, image, name, age, color, race, about, phoneNumber, ownerName, price):
+    string = '''
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            width: 60%;
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        .container {
+            padding: 2px 16px;
+        }
+        
+    </style>
+    </head>
+    <body>
+    
+    <h1># ''' + str(cheap_number) + ": " + str(name) + ''' :)</h1>
+    <div class="card">
+    <img src= "'''+ str(image) +'''" alt="Image" style="width:100%">
+    <div class="container">
+        <h4><b>I'm ''' + str(age) + ''' years old</b></h4> 
+        <p>My color is ''' + str(color) + '''</p> 
+        <p>My race is ''' + str(race) + '''</p> 
+        <p>My current owner called ''' + str(ownerName) + '''</p> 
+        <p>His phone number is ''' + str(phoneNumber) + '''</p> 
+        <p>My price is ''' + str(price) + '''</p> 
+        <p>Others dogs say that i'm ''' + str(about) + '''</p>
+    </div>
+    </div>
+    
+    </body>
+    '''
+
+    return string
+
 
 st.title("Get a dog")
 st.write('''
@@ -23,57 +74,60 @@ st.write('''
         So what are you waiting for?\n
         All the cutest dogs are waiting for you :)''')
 
-dogs_db = pd.DataFrame({
-    'images': ["https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2022-08/220805-border-collie-play-mn-1100-82d2f1.jpg",
-               "https://cdn-prod.medicalnewstoday.com/content/images/articles/322/322868/golden-retriever-puppy.jpg"],
-    'names': ["Toto", 'Sky'],
-    'ages': [3, 6],
-    'colors': ["Yellow", "Blonde"],
-    'race': ["Pakinez", "Siberian Husky"],
-    'about': ["Good with kids", "Everybody loves me"],
-    'phone number': ['0554453215', '0564443212'],
-    'owner name': ["Elad", "Meital"],
-    'price': [300, 680]
-}, index=["1", "2"])
-
-dogs_db2 = dogs_db
-
 menu = ["Home", "Add Dog", "Edit Dog", "Delete Dog", "About"]
 st.sidebar.header('Menu')
 choice = st.sidebar.radio("Choose screen", menu)
 
 
-def add_dog(image, name, age, color, race, about, phoneNumber, ownerName, price):
-    df1 = pd.DataFrame({
-        "images": image,
-        "names": name
-    }, index=["3"])
-    dogs_db2 = dogs_db.append(df1)
-    st.dataframe(dogs_db2)
+def add_dog(cheap_number, image, name, age, color, race, about, phoneNumber: str, ownerName, price):
+    r = requests.post("http://backend/v1/AddDog", json={
+        'cheap_number': cheap_number,
+        "image": image,
+        "name": name,
+        "color": color,
+        "age": age,
+        "race": race,
+        "about": about,
+        'phone_number': phoneNumber,
+        'owner_name': ownerName,
+        'price': price
+    })
+    st.write(r.text)
+
     st.success("Great !!! your dog is added !")
-#     st.experimental_rerun()
 
 
 def get_dogs():
-    st.dataframe(dogs_db2)
-    for index, row in dogs_db2.iterrows():
-        st.image(row["images"],
-                 width=400)
-        st.write("""
-                                        Hello nice to meet tou :)
-                                        """)
-        data = {'My Name': row["names"],
-                'My Age': row["ages"],
-                'My Color': row["colors"],
-                'My Race': row["race"],
-                'About me': row["about"],
-                'Owner Number': row["phone number"],
-                'Owner Name': row["owner name"],
-                'price': row["price"]}
+    request = requests.get("http://backEnd/v1/GetDogsList")
+    json_obj = request.json()
+    data = pd.read_json(json_obj)
+    st.dataframe(data)
 
-        df = pd.DataFrame(data, index=[0])
-        df = df.reset_index(drop=True)
-        st.dataframe(df)
+    for index, row in data.iterrows():
+        no_image = "https://artsmidnorthcoast.com/wp-content/uploads/2014/05/no-image-available-icon-6.png"
+        url = row["image"]
+        
+        try:
+            response = requests.head(url)
+            st.write(response)
+            proper_url = True if (response.status_code == 200 or response.status_code == 304) else False
+            if proper_url:
+                row["image"] = url
+            else:
+                row["image"] = no_image
+        except:
+            row["image"] = no_image
+
+        st.markdown(create_card(row["cheap_number"],
+                                row["image"],
+                                row["name"],
+                                row["age"],
+                                row["color"],
+                                row["race"],
+                                row["about"],
+                                row["phone_number"],
+                                row["owner_name"],
+                                row["price"]), unsafe_allow_html=True)
 
 
 def add_bg_from_url():
@@ -91,6 +145,17 @@ def add_bg_from_url():
     )
 
 
+def edit_dog(cheap_number):
+    request = requests.get("http://backend/v1/GetDogsList")
+    json_obj = request.json()
+    data = pd.read_json(json_obj)
+
+    for indedx, row in data.iterrows():
+        if str(row["cheap_number"]) == str(cheap_number):
+            return row
+    return "cheap not found.."
+
+
 if choice == "Home":
     get_dogs()
     st.sidebar.header('Sort by price')
@@ -101,29 +166,99 @@ elif choice == "Add Dog":
     st.header("Add Dog")
     col1, col2 = st.columns(2)
     with col1:
-        options = ["Take a picture", "Upload from computer", "URL"]
-        image_input = st.selectbox("**Add a picture of your dog**", options)
-        if image_input == "Take a picture":
-            st.camera_input("Take a picture")
-        elif image_input == "Upload from computer":
-            st.file_uploader("Upload from computer")
-        elif image_input == "URL":
-            st.text_input("Add image from URL")
+        cheap_number = st.text_input("**Insert your dog cheap number**")
+        image_input = st.text_input("Add image from URL")
         name_input = st.text_input("**Your dog name**")
-        age_input = st.number_input("**Your dog age**")
-        if age_input < 0:
-            st.error("**Age cannot be less than 0**")
-        color_input = st.text_input("**Describe the color of your dog**")
-        race_input = st.text_input("**What is the race of your dog?**")
+        age_input = st.number_input(
+            "**Your dog age**", min_value=0.0, step=0.1)
+        color_input = st.text_input("**My color is**")
+        race_input = st.text_input("**My race is**")
         about_input = st.text_area("**Tell some about your dog...**")
-        phone_number_input = st.text_input("**Insert your phone number**")
-        owner_name_input = st.text_input("**Owner name**")
-        price_input = st.text_input(
-            "**What is your price? (it's better for free :))**")
+        phone_number_input = st.text_input("**His phone number is**")
+        owner_name_input = st.text_input("**My current owner called**")
+        price_input = st.text_input("**My price is**")
         if age_input > 0:
             if st.button("Add"):
-                add_dog(image_input, name_input, age_input, color_input, race_input,
+                add_dog(cheap_number, image_input, name_input, age_input, color_input, race_input,
                         about_input, phone_number_input, owner_name_input, price_input)
-                st.session_state = False
+elif choice == "Edit Dog":
+    st.header("Edit dog")
+
+    request = requests.get("http://backend/v1/GetDogsList")
+    json_obj = request.json()
+    data = pd.read_json(json_obj)
+
+    with st.expander("View all dogs"):
+        st.dataframe(data.drop(["image"], axis=1))
+
+    search_inbox = st.text_input("**Insert dog cheap number**")
+    if search_inbox:
+        data = edit_dog(search_inbox)
+        # st.dataframe(data)
+        new_name = st.text_input("**Name**", data["name"])
+        new_cheap_number = st.text_input(
+            "**Cheap Number**", data["cheap_number"])
+        image_input = st.text_input("**Image**", data["image"])
+        age_input = st.number_input(
+            "**Age**", min_value=0.0, step=0.1, value=data["age"])
+        color_input = st.text_input("**Color**", data["color"])
+        race_input = st.text_input("**Race**", data["race"])
+        about_input = st.text_area("**About**", data["about"])
+        phone_number_input = st.text_input(
+            "**Phone Number**", data["phone_number"])
+        owner_name_input = st.text_input("**Owner Name**", data["owner_name"])
+        price_input = st.text_input("**Price**", data["price"])
+        
+        # new_dog = Dog(cheap_number=new_cheap_number, image=image_input, name=new_name, color=color_input,
+        #               age=age_input, race=race_input, about=about_input, phone_number=phone_number_input,
+        #               owner_name = owner_name_input, price = price_input)
+        
+        # new_dog.cheap_number = new_cheap_number
+        # new_dog.image = image_input
+        # new_dog.name = new_name
+        # new_dog.color = color_input
+        # new_dog.age = age_input
+        # new_dog.race = race_input
+        # new_dog.about = about_input
+        # new_dog.phone_number = phone_number_input
+        # new_dog.owner_name = owner_name_input
+        # new_dog.price = price_input
+        
+        
+        if st.button("Save"):
+            r = requests.put("http://backend/v1/EditDog", json={
+                "cheap_number" : new_cheap_number,
+                "image": image_input,
+                "name": new_name,
+                "color": color_input,
+                "age": age_input,
+                "race": race_input,
+                "about": about_input,
+                "phone_number": phone_number_input,
+                "owner_name": owner_name_input,
+                "price": price_input
+            })
+            st.success(r.text)
+            
+elif choice == "Delete Dog":
+    request = requests.get("http://backend/v1/GetDogsList")
+    json_obj = request.json()
+    data = pd.read_json(json_obj)
+
+    with st.expander("View all dogs"):
+        st.dataframe(data.drop(["image"], axis=1))
+    search_inbox = st.text_input("**Insert dog cheap number to delete:**")
+    
+    if search_inbox:
+        st.info("Are you sure?")
+
+        yes_button = st.button("YES")
+        no_button = st.button("NO")
+        if yes_button:
+            request = requests.delete("http://backend/v1/RemoveDog/" + search_inbox)
+            st.write(request.text)
+            st.success("Dog deleted")
+        elif no_button:
+            st.success("Dog is not deleted")
 
 add_bg_from_url()

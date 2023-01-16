@@ -1,31 +1,58 @@
 from fastapi import FastAPI
-from models import *
+import requests
+import json
+from pydantic import BaseModel
+
+# from models import Dog
+
+
+class Dog(BaseModel):
+    cheap_number: int
+    image: str
+    name: str
+    color: str
+    age: float
+    race: str
+    about: str
+    phone_number: str
+    owner_name: str
+    price: str
+
 
 app = FastAPI()
 
-#  Hard coded ... remove later
-dogsList = [
-    Dog(1, "Koko", 2.4, "yellow", "husky", "good with kids !!!")
-]
-
 
 class Backend:
+    @app.get('/v1/call')
+    def call():
+        r = requests.get("http://database/send")
+        return r.text
+
     @app.get("/v1/TestDogsList")
     def TestDogsList():
-        return dogsList
+        return "dogsList"
 
     @app.get("/v1/GetDogsList")
     def GetDogsList():
-        return "http request to get dogs list from DB by dog service"
+        r = requests.get("http://database/v1/getDogs")
+        return r.json()
 
     @app.post("/v1/AddDog")
     def AddDog(newDog: Dog):
-        return "http request to add new dog to DB by dog service"
+        r = requests.post("http://database/v1/AddDog", data=json.dumps(newDog.__dict__), headers={
+                  'Content-Type': 'application/json'
+        })
+        return r.text
 
     @app.put("/v1/EditDog")
     def EditDog(updateDog: Dog):
-        return "http request to update existing dog in DB by dog service"
+        r = requests.put("http://database/v1/EditDogs",
+                          data=json.dumps(updateDog.__dict__), headers={
+                              'Content-Type': 'application/json'
+                          })
+        return r.text
 
-    @app.delete("/v1/RemoveDog")
-    def RemoveDog(dog_id: int):
-        return "http request to remove existing dog in DB by dog service"
+    @app.delete("/v1/RemoveDog/{cheap_number}")
+    def RemoveDog(cheap_number: int):
+        r = requests.delete("http://database/v1/RemoveDog/" + str(cheap_number))
+        return r.text
