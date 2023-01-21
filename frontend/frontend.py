@@ -153,14 +153,15 @@ def edit_dog(cheap_number):
     for indedx, row in data.iterrows():
         if str(row["cheap_number"]) == str(cheap_number):
             return row
+        
     return "cheap not found.."
-
+            
 
 if choice == "Home":
     get_dogs()
     st.sidebar.header('Sort by price')
-    st.sidebar.slider(min_value=0, max_value=1000,
-                      label="Select maximum price:")
+    sorted = st.sidebar.slider(min_value=0, max_value=10000,
+                      label="Select maximum price:", value=[0, 10000])
 
 elif choice == "Add Dog":
     st.header("Add Dog")
@@ -181,6 +182,7 @@ elif choice == "Add Dog":
             if st.button("Add"):
                 add_dog(cheap_number, image_input, name_input, age_input, color_input, race_input,
                         about_input, phone_number_input, owner_name_input, price_input)
+                
 elif choice == "Edit Dog":
     st.header("Edit dog")
 
@@ -194,52 +196,39 @@ elif choice == "Edit Dog":
     search_inbox = st.text_input("**Insert dog cheap number**")
     if search_inbox:
         data = edit_dog(search_inbox)
-        # st.dataframe(data)
-        new_name = st.text_input("**Name**", data["name"])
-        new_cheap_number = st.text_input(
-            "**Cheap Number**", data["cheap_number"])
-        image_input = st.text_input("**Image**", data["image"])
-        age_input = st.number_input(
-            "**Age**", min_value=0.0, step=0.1, value=data["age"])
-        color_input = st.text_input("**Color**", data["color"])
-        race_input = st.text_input("**Race**", data["race"])
-        about_input = st.text_area("**About**", data["about"])
-        phone_number_input = st.text_input(
-            "**Phone Number**", data["phone_number"])
-        owner_name_input = st.text_input("**Owner Name**", data["owner_name"])
-        price_input = st.text_input("**Price**", data["price"])
-        
-        # new_dog = Dog(cheap_number=new_cheap_number, image=image_input, name=new_name, color=color_input,
-        #               age=age_input, race=race_input, about=about_input, phone_number=phone_number_input,
-        #               owner_name = owner_name_input, price = price_input)
-        
-        # new_dog.cheap_number = new_cheap_number
-        # new_dog.image = image_input
-        # new_dog.name = new_name
-        # new_dog.color = color_input
-        # new_dog.age = age_input
-        # new_dog.race = race_input
-        # new_dog.about = about_input
-        # new_dog.phone_number = phone_number_input
-        # new_dog.owner_name = owner_name_input
-        # new_dog.price = price_input
-        
-        
-        if st.button("Save"):
-            r = requests.put("http://backend/v1/EditDog", json={
-                "cheap_number" : new_cheap_number,
-                "image": image_input,
-                "name": new_name,
-                "color": color_input,
-                "age": age_input,
-                "race": race_input,
-                "about": about_input,
-                "phone_number": phone_number_input,
-                "owner_name": owner_name_input,
-                "price": price_input
-            })
-            st.success(r.text)
+        if str(data) == "cheap not found..":
+            st.error(str(data))
+        else:
+            new_name = st.text_input("**Name**", data["name"])
+            new_cheap_number = st.text_input(
+                "**Cheap Number**", data["cheap_number"])
+            image_input = st.text_input("**Image**", data["image"])
+            age_input = st.number_input(
+                "**Age**", min_value=0.0, step=0.1, value=data["age"])
+            color_input = st.text_input("**Color**", data["color"])
+            race_input = st.text_input("**Race**", data["race"])
+            about_input = st.text_area("**About**", data["about"])
+            phone_number_input = st.text_input(
+                "**Phone Number**", data["phone_number"])
+            owner_name_input = st.text_input("**Owner Name**", data["owner_name"])
+            price_input = st.text_input("**Price**", data["price"])
             
+            if st.button("Save"):
+                r = requests.put("http://backend/v1/EditDog", json={
+                    "cheap_number" : new_cheap_number,
+                    "image": image_input,
+                    "name": new_name,
+                    "color": color_input,
+                    "age": age_input,
+                    "race": race_input,
+                    "about": about_input,
+                    "phone_number": phone_number_input,
+                    "owner_name": owner_name_input,
+                    "price": price_input
+                })
+                st.success(r.text)
+    
+                
 elif choice == "Delete Dog":
     request = requests.get("http://backend/v1/GetDogsList")
     json_obj = request.json()
