@@ -23,3 +23,6 @@ class Dog(BaseModel):
                          phone_number = phone_number,
                          owner_name = owner_name,
                          price = price)
+
+    def __init__(self,val):
+        self.val=val

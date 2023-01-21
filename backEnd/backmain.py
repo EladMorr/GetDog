@@ -3,21 +3,7 @@ import requests
 import json
 from pydantic import BaseModel
 
-# from models import Dog
-
-
-class Dog(BaseModel):
-    cheap_number: int
-    image: str
-    name: str
-    color: str
-    age: float
-    race: str
-    about: str
-    phone_number: str
-    owner_name: str
-    price: str
-
+from models import *
 
 app = FastAPI()
 

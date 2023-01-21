@@ -2,23 +2,8 @@ import mysql.connector
 from fastapi import FastAPI
 import json
 from pydantic import BaseModel
-import pymysql
 import pandas as pd
-from sqlalchemy import create_engine
-
-
-class Dog(BaseModel):
-    cheap_number: int
-    image: str
-    name: str
-    color: str
-    age: float
-    race: str
-    about: str
-    phone_number: str
-    owner_name: str
-    price: str
-
+from models import *
 
 app = FastAPI()
 

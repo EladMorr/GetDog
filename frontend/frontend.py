@@ -1,4 +1,4 @@
-import os
+import sys
 from streamlit.components.v1 import html
 import pandas as pd
 from streamlit.web.cli import main
@@ -8,22 +8,12 @@ import requests
 from urllib.parse import urlparse
 from pydantic import BaseModel
 import json
-
+from models import *
 
 st.set_page_config(layout="wide")
 
 
-class Dog(BaseModel):
-    cheap_number: int
-    image: str
-    name: str
-    color: str
-    age: float
-    race: str
-    about: str
-    phone_number: str
-    owner_name: str
-    price: str
+
 
 def create_card(cheap_number, image, name, age, color, race, about, phoneNumber, ownerName, price):
     string = '''
@@ -49,7 +39,7 @@ def create_card(cheap_number, image, name, age, color, race, about, phoneNumber,
     
     <h1># ''' + str(cheap_number) + ": " + str(name) + ''' :)</h1>
     <div class="card">
-    <img src= "'''+ str(image) +'''" alt="Image" style="width:100%">
+    <img src= "''' + str(image) + '''" alt="Image" style="width:100%">
     <div class="container">
         <h4><b>I'm ''' + str(age) + ''' years old</b></h4> 
         <p>My color is ''' + str(color) + '''</p> 
@@ -101,16 +91,15 @@ def get_dogs():
     request = requests.get("http://backEnd/v1/GetDogsList")
     json_obj = request.json()
     data = pd.read_json(json_obj)
-    st.dataframe(data)
 
     for index, row in data.iterrows():
         no_image = "https://artsmidnorthcoast.com/wp-content/uploads/2014/05/no-image-available-icon-6.png"
         url = row["image"]
-        
+
         try:
             response = requests.head(url)
-            st.write(response)
-            proper_url = True if (response.status_code == 200 or response.status_code == 304) else False
+            proper_url = True if (response.status_code ==
+                                  200 or response.status_code == 304) else False
             if proper_url:
                 row["image"] = url
             else:
@@ -153,15 +142,15 @@ def edit_dog(cheap_number):
     for indedx, row in data.iterrows():
         if str(row["cheap_number"]) == str(cheap_number):
             return row
-        
+
     return "cheap not found.."
-            
+
 
 if choice == "Home":
     get_dogs()
     st.sidebar.header('Sort by price')
     sorted = st.sidebar.slider(min_value=0, max_value=10000,
-                      label="Select maximum price:", value=[0, 10000])
+                               label="Select maximum price:", value=[0, 10000])
 
 elif choice == "Add Dog":
     st.header("Add Dog")
@@ -182,7 +171,7 @@ elif choice == "Add Dog":
             if st.button("Add"):
                 add_dog(cheap_number, image_input, name_input, age_input, color_input, race_input,
                         about_input, phone_number_input, owner_name_input, price_input)
-                
+
 elif choice == "Edit Dog":
     st.header("Edit dog")
 
@@ -210,12 +199,13 @@ elif choice == "Edit Dog":
             about_input = st.text_area("**About**", data["about"])
             phone_number_input = st.text_input(
                 "**Phone Number**", data["phone_number"])
-            owner_name_input = st.text_input("**Owner Name**", data["owner_name"])
+            owner_name_input = st.text_input(
+                "**Owner Name**", data["owner_name"])
             price_input = st.text_input("**Price**", data["price"])
-            
+
             if st.button("Save"):
                 r = requests.put("http://backend/v1/EditDog", json={
-                    "cheap_number" : new_cheap_number,
+                    "cheap_number": new_cheap_number,
                     "image": image_input,
                     "name": new_name,
                     "color": color_input,
@@ -227,8 +217,8 @@ elif choice == "Edit Dog":
                     "price": price_input
                 })
                 st.success(r.text)
-    
-                
+
+
 elif choice == "Delete Dog":
     request = requests.get("http://backend/v1/GetDogsList")
     json_obj = request.json()
@@ -237,14 +227,15 @@ elif choice == "Delete Dog":
     with st.expander("View all dogs"):
         st.dataframe(data.drop(["image"], axis=1))
     search_inbox = st.text_input("**Insert dog cheap number to delete:**")
-    
+
     if search_inbox:
         st.info("Are you sure?")
 
         yes_button = st.button("YES")
         no_button = st.button("NO")
         if yes_button:
-            request = requests.delete("http://backend/v1/RemoveDog/" + search_inbox)
+            request = requests.delete(
+                "http://backend/v1/RemoveDog/" + search_inbox)
             st.write(request.text)
             st.success("Dog deleted")
         elif no_button:
