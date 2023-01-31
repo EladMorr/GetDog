@@ -87,11 +87,14 @@ def add_dog(cheap_number, image, name, age, color, race, about, phoneNumber: str
     st.success("Great !!! your dog is added !")
 
 
-def get_dogs():
+def get_dogs(sorted_price, sorted_age):
     request = requests.get("http://backEnd/v1/GetDogsList")
     json_obj = request.json()
     data = pd.read_json(json_obj)
-
+    data = data[(data["price"] >= sorted_price[0]) & (data["price"] <= sorted_price[1])]
+    data = data[(data["age"] >= sorted_age[0]) &
+                (data["age"] <= sorted_age[1])]
+    
     for index, row in data.iterrows():
         no_image = "https://artsmidnorthcoast.com/wp-content/uploads/2014/05/no-image-available-icon-6.png"
         url = row["image"]
@@ -145,13 +148,19 @@ def edit_dog(cheap_number):
 
     return "cheap not found.."
 
+x = 1
+y = 10000
 
 if choice == "Home":
-    get_dogs()
+    
     st.sidebar.header('Sort by price')
-    sorted = st.sidebar.slider(min_value=0, max_value=10000,
-                               label="Select maximum price:", value=[0, 10000])
-
+    sorted_price = st.sidebar.slider(min_value=0, max_value=10000,
+                               label="Select price range:", value=[x, y])
+    # x, y = sorted_price
+    sorted_age = st.sidebar.slider(min_value=0, max_value=20,
+                               label="Select age range:", value=[0, 20])
+    get_dogs(sorted_price, sorted_age)
+    
 elif choice == "Add Dog":
     st.header("Add Dog")
     col1, col2 = st.columns(2)
