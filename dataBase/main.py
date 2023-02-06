@@ -62,12 +62,15 @@ def database_exists():
 
 @app.get("/check")
 def check():
-    if database_exists():
-        return "Database exists"
-    else:
-        # create the db because it doesn't exists
-        createDB()
-        return "Database not found, new db called dogs created"
+    try:
+        if database_exists():
+            return "Database exists"
+        else:
+            # create the db because it doesn't exists
+            createDB()
+            return "Database not found, new db called dogs created"
+    except:
+        return "Any issue with the connection"
 
 
 @app.post("/v1/AddDog")

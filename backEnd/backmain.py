@@ -42,3 +42,8 @@ class Backend:
     def RemoveDog(cheap_number: int):
         r = requests.delete("http://database/v1/RemoveDog/" + str(cheap_number))
         return r.text
+
+    @app.get("/v1/check")
+    def check():
+        r = requests.get("http://database/check")
+        return r.text
