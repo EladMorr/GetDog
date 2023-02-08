@@ -108,7 +108,6 @@ if ("exist" in init.text) or ("created" in init.text):
             'owner_name': ownerName,
             'price': price
         })
-        st.write(r.text)
 
         st.success("Great !!! your dog is added !")
 
@@ -147,10 +146,11 @@ if ("exist" in init.text) or ("created" in init.text):
                                     row["owner_name"],
                                     row["price"]), unsafe_allow_html=True)
     if choice == "Home":
-        st.sidebar.header('Sort by price')
+        st.sidebar.header('Sort Panel')
+        st.subheader('Sort By Price')
         sorted_price = st.sidebar.slider(min_value=0, max_value=10000,
                                 label="Select price range:", value=[1, 10000])
-        # x, y = sorted_price
+        st.subheader('Sort By Age')
         sorted_age = st.sidebar.slider(min_value=0, max_value=20,
                                 label="Select age range:", value=[0, 20])
         get_dogs(sorted_price, sorted_age)
@@ -239,7 +239,7 @@ if ("exist" in init.text) or ("created" in init.text):
             if yes_button:
                 request = requests.delete(
                     "http://backend/v1/RemoveDog/" + search_inbox)
-                st.write(request.text)
+                
                 st.success("Dog deleted")
             elif no_button:
                 st.success("Dog is not deleted")
