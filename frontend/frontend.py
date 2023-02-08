@@ -72,7 +72,7 @@ if ("exist" in init.text) or ("created" in init.text):
             <p>My color is ''' + str(color) + '''</p> 
             <p>My race is ''' + str(race) + '''</p> 
             <p>My current owner called ''' + str(ownerName) + '''</p> 
-            <p>His phone number is ''' + str(phoneNumber) + '''</p> 
+            <p>His phone number is 0''' + str(phoneNumber) + '''</p> 
             <p>My price is ''' + str(price) + '''</p> 
             <p>Others dogs say that i'm ''' + str(about) + '''</p>
         </div>
@@ -95,7 +95,7 @@ if ("exist" in init.text) or ("created" in init.text):
     choice = st.sidebar.radio("Choose screen", menu)
 
 
-    def add_dog(cheap_number, image, name, age, color, race, about, phoneNumber: str, ownerName, price):
+    def add_dog(cheap_number, image, name, age, color, race, about, phoneNumber, ownerName, price):
         r = requests.post("http://backend/v1/AddDog", json={
             'cheap_number': cheap_number,
             "image": image,
@@ -109,7 +109,7 @@ if ("exist" in init.text) or ("created" in init.text):
             'price': price
         })
 
-        st.success("Great !!! your dog is added !")
+        st.success("Great, your dog is added !")
 
 
     def get_dogs(sorted_price, sorted_age):
