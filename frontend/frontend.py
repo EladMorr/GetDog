@@ -219,7 +219,10 @@ if ("exist" in init.text) or ("created" in init.text):
                         "owner_name": owner_name_input,
                         "price": price_input
                     })
-                    st.success(r.text)
+                    if "Success" in r.text:
+                        st.success("Success")
+                    else:
+                        st.error("Error")
 
 
     elif choice == "Delete Dog":
