@@ -149,7 +149,7 @@ if ("exist" in init.text) or ("created" in init.text):
         st.sidebar.header('Sort Panel')
         st.subheader('Sort By Price')
         sorted_price = st.sidebar.slider(min_value=0, max_value=10000,
-                                label="Select price range:", value=[1, 10000])
+                                label="Select price range:", value=[0, 10000])
         st.subheader('Sort By Age')
         sorted_age = st.sidebar.slider(min_value=0, max_value=20,
                                 label="Select age range:", value=[0, 20])
