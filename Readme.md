@@ -2,6 +2,8 @@ This application build by Elad Mor.
 
 The backend wrote with python and the front in streamlit.
 
+https://user-images.githubusercontent.com/59889835/219135477-f30d077f-01e8-4fa6-86a6-500f3c4758bf.mp4
+
 In console make new direction:
 ```
 mkdir Elad_The_King
@@ -58,6 +60,6 @@ https://ichef.bbci.co.uk/news/976/cpsprodpb/17638/production/_124800859_gettyima
 ![image](https://user-images.githubusercontent.com/59889835/217649766-eba17176-3bdb-4724-9efb-e272b5d42ae9.png)
 
 
-https://user-images.githubusercontent.com/59889835/219135477-f30d077f-01e8-4fa6-86a6-500f3c4758bf.mp4
+
 
 
