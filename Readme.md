@@ -16,7 +16,7 @@ cd Elad_The_King
 
 Clone my repository, write in console: 
 ```
-git clone https://github.com/EASS-HIT-PART-A-2022-CLASS-II/Elad_Mor_Project.git
+git clone https://github.com/EladMorr/GetDog.git
 ```
 
 For build this project at the first time you need to run: 
