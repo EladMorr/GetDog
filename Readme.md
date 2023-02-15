@@ -1,6 +1,6 @@
 This application build by Elad Mor.
 
-The backend wrote with python and the front in streamlit.
+The Backend wrote with python using FastAPI and the front in streamlit.
 
 https://user-images.githubusercontent.com/59889835/219135477-f30d077f-01e8-4fa6-86a6-500f3c4758bf.mp4
 
